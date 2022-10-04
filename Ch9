@@ -1,0 +1,130 @@
+package Ch8;
+
+import java.util.Scanner;
+
+public class Deter {
+	private final static String TITLE = "Determinants Part 1";
+	private final static String CONTINUE_PROMPT = "Do this again? [y/N] ";
+
+	// **********************************************
+	// Put as many methods you need here
+	private double[][] m;
+	private int numberOfRows; private int numberOfColumns;
+
+	//Constructors: Two constructors were created. The first, takes two ints as parameters for the shape of the matrix and initializes the elements to 0. The second has no parameters, but instead asks the user to supply the shape and element values via scanner.
+
+	public void Matrix(int rows, int columns)
+	{
+	    m = new double[rows][columns];
+
+	    for(int i = 0; i < rows; i++)
+	    {
+	        for(int j = 0; j < columns; j++)
+	        {
+	            m[i][j] = 0;
+	        }
+	    }
+	}
+	private int getRows() {
+		return numberOfRows;
+	}
+	private int getColumns() {
+		return numberOfColumns;
+	}
+	
+	
+	private static void swaprows(double[][] a, int size, int i, int j) {
+		for (var k = 0; k < size; k++) {
+			double temp = a[i][k];
+			a[i][k] = a[j][k];
+			a[j][k] = temp;
+		}
+	}
+
+	private static double det(double[][] a, int size) {
+		double temp = 1.0, coeff;
+		int i, j, l;
+		for (i = 0; i < size; i++) {
+			if (a[i][i] == 0.0) {
+				for (j = i; j < size; j++)
+					if (a[j][i] != 0)
+						break;
+				if (j < size) {
+					swaprows(a, size, i, j);
+					temp = -temp;
+				} else
+					break;
+			}
+			temp *= coeff = a[i][i];
+			for (j = i; j < size; j++)
+				a[i][j] = a[i][j] / coeff;
+			for (l = i + 1; l < size; l++) {
+				coeff = a[l][i];
+				for (j = i; j < size; j++)
+					a[l][j] = a[l][j] - coeff * a[i][j];
+			}
+		}
+		return i < size ? 0.0 : temp;
+	}
+	
+	private static void displayMatrix(double[][] a, int size) {
+		for (var i = 0; i < size; i++) {
+			for (var j = 0; j < size; j++) {
+				System.out.printf("%10.2f", a[i][j]);
+			}
+			System.out.println();
+		}
+	}
+
+	private static void readMatrix(double[][] a, int size, Scanner input) {
+		for (var i = 0; i < size; i++) {
+			for (var j = 0; j < size; j++)
+				a[i][j] = input.nextDouble();
+		}
+	}
+
+	// **********************************************
+	// Start your logic coding in the process method
+	private static void process(Scanner input, String args[]) throws Exception {
+		System.out.print("Enter the size of array: ");
+		int size = input.nextInt();
+		double[][] matrix = new double[size][size];
+		System.out.println("Enter Matrix Elements: ");
+		for (int r = 0; r < size; r++) {
+			for (int c = 0; c < size; c++) {
+				System.out.println(String.format("Enter [%d][%d] integer", r, c));
+				matrix[r][c] = input.nextInt();
+			}
+		}
+		Matrix a = new Matrix(a.getNumRows(), a.getNumColumns());
+		
+		
+		readMatrix(matrix, size, input);
+		System.out.printf("Matrix Elements = \n");
+		displayMatrix(matrix, size);
+		System.out.printf("The determinate = %10.3f\n", det(matrix, size));
+
+		input.nextLine(); // Clear the Keyboard
+	}
+
+	// **********************************************
+	// Do not change the doThisAgain method
+	private static boolean doThisAgain(Scanner input, String prompt) {
+		System.out.print(prompt);
+		String doOver = input.nextLine();
+		return doOver.trim().equalsIgnoreCase("Y");
+	}
+
+	// **********************************************
+	// Do not change the main method
+	public static void main(String args[]) throws Exception {
+		System.out.println("Welcome to " + TITLE);
+		Scanner input = new Scanner(System.in);
+		do {
+			process(input, args);
+		} while (doThisAgain(input, CONTINUE_PROMPT));
+		input.close();
+		System.out.println("Thank you for using " + TITLE);
+	}
+
+}
